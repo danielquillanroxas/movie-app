@@ -48,16 +48,20 @@ export default function Header() {
             icon: 'pi pi-star',
             command: () => { window.location.reload(); }
         },
+        {
+            template: () => {
+                return <div className='flex'><InputText placeholder="Search" type="text" className="w-full" /><Button icon='pi pi-search'></Button></div>;
+            }
+        }
 
 
     ];
 
     const start = <a className="mr-2" href='/' style={{ fontSize: '2em', fontWeight: 'bold', textDecoration: 'none', color: 'inherit'}}>Movies DB</a>;
-    const end = <InputText placeholder='Search' type='text'></InputText>
 
     return (
         <div className="card">
-            <Menubar model={items} start={start} end={end}/>
+            <Menubar model={items} start={start}/>
         </div>
   )
 }
