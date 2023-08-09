@@ -17,12 +17,35 @@ function SearchResults({ searchText, movies }) {
         { name: 'Ratings', value: 'vote_average' }
     ];
 
+    const filterMovies = (filter) => {
+        let sortedMovies = [];
+        switch(filter) {
+            case "release_date":
+                sortedMovies = [...movies].sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+                break;
+
+            case "popularity":
+                sortedMovies = [...movies].sort((a, b) => b.popularity - a.popularity);
+                break;
+
+            case "vote_average":
+                sortedMovies = [...movies].sort((a,b) => b.vote_average - a.vote_average);
+                break;
+
+            default:
+                break;
+
+        }
+        setFilteredMovies(sortedMovies);
+    }
+
     return (
         <div>
             <div className="flex justify-content-between my-3 mx-3">
                 <h2>Top Search Results for &quot;{searchText}&quot;</h2>
                 <div className="col-2">
                     <Dropdown
+                        onChange={(e) => filterMovies(e.target.value)}
                         options={sortby}
                         optionLabel="name"
                         placeholder="Sort By"
