@@ -1,18 +1,32 @@
-"use client"
-import 'primeflex/primeflex.css'
-import { Button } from 'primereact/button'
-import { PrimeReactProvider, PrimeReactContext } from 'primereact/api'
-import 'primereact/resources/themes/viva-dark/theme.css'
-import 'primereact/resources/primereact.min.css'
-import 'primeicons/primeicons.css'
-import { Carousel } from 'primereact/carousel'
-import { getPopularMovies, getTrendingMovies, getUpcomingMovies } from '@/utils/requests'
-import Card from './components/Card'
+"use client";
 
-export default async function HomePage() {
-  const movies = await getTrendingMovies();
-  const movies1 = await getPopularMovies();
-  const movies2 = await getUpcomingMovies();
+import React, { useState, useEffect } from 'react';
+import 'primeflex/primeflex.css';
+import 'primereact/resources/themes/viva-dark/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import { Carousel } from 'primereact/carousel';
+import { getPopularMovies, getTrendingMovies, getUpcomingMovies } from '@/utils/requests';
+import Card from './components/Card';
+
+export default function HomePage() {
+  const [movies, setMovies] = useState([]);
+  const [movies1, setMovies1] = useState([]);
+  const [movies2, setMovies2] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const trendingMovies = await getTrendingMovies();
+      const popularMovies = await getPopularMovies();
+      const upcomingMovies = await getUpcomingMovies();
+
+      setMovies(trendingMovies);
+      setMovies1(popularMovies);
+      setMovies2(upcomingMovies);
+    }
+
+    fetchData();
+  }, []);
 
   const responsiveOptions = [
     {
@@ -64,6 +78,5 @@ export default async function HomePage() {
         circular
         autoplayInterval={3000} />
     </div>
-
   );
 }
