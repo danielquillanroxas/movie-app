@@ -1,18 +1,34 @@
 "use client";
 import { useState } from 'react';
 import { Menubar } from 'primereact/menubar';
-import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/navigation';
+import { AutoComplete } from 'primereact/autocomplete';
 
 export default function Header() {
-    const [searchText, setSearchText] = useState("");
+    const [inputValue, setInputValue] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
     const router = useRouter();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (searchText) {
-            router.push(`/movies/search?query=${searchText}`)
+        let query = inputValue;
+        if (typeof inputValue === "object" && inputValue.title) {
+            query = inputValue.title;
+        }
+
+        if (query) {
+            router.push(`/movies/search?query=${query}`)
+        }
+    }
+
+    const fetchSuggestions = async (e) => {
+        if(e.query.length > 1) {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/search/movie?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${e.query}`);
+            const data = await response.json();
+            setSuggestions(data.results);
+        } else {
+            setSuggestions([]);
         }
     }
 
@@ -21,12 +37,16 @@ export default function Header() {
             template: () => {
                 return (
                     <form onSubmit={e => handleSubmit(e)} className='flex'>
-                        <InputText
+                        <AutoComplete
+                            value={inputValue}
+                            suggestions={suggestions}
+                            completeMethod={fetchSuggestions}
+                            field="title"
+                            size={30}
                             placeholder="Search"
-                            type="text"
-                            className="w-full"
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
+                            minLength={1}
+                            dropdown={true}
+                            onChange={(e) => setInputValue(e.value)}
                         />
                         <Button type="submit" icon='pi pi-search'></Button>
                     </form>
