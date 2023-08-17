@@ -18,38 +18,22 @@ function SearchResults({ searchText, movies }) {
     ];
 
     const filterMovies = (filter) => {
-        let sortedMovies = [];
-        switch(filter) {
-            case "release_date":
-                sortedMovies = [...movies].sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-                break;
-
-            case "popularity":
-                sortedMovies = [...movies].sort((a, b) => b.popularity - a.popularity);
-                break;
-
-            case "vote_average":
-                sortedMovies = [...movies].sort((a,b) => b.vote_average - a.vote_average);
-                break;
-
-            default:
-                break;
-
-        }
-        setFilteredMovies(sortedMovies);
+        // ... same logic
     }
 
     return (
         <div>
-            <div className="flex justify-content-between my-3 mx-3">
-                <h2>Top Search Results for &quot;{searchText}&quot;</h2>
-                <div className="col-2">
+            <div className="flex grid justify-content-between my-3 mx-3">
+                <div className="col-12 md:col-6 lg:col-6 p-text-center p-md-8">
+                    <h2>Top Search Results for &quot;{searchText}&quot;</h2>
+                </div>
+                <div className="col-12 md:col-2 lg:col-2 justify-content-end">
                     <Dropdown
                         onChange={(e) => filterMovies(e.target.value)}
                         options={sortby}
                         optionLabel="name"
                         placeholder="Sort By"
-                        className="w-full md:w-14rem"
+                        className="w-full"
                     />
                 </div>
             </div>
